@@ -3,10 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCartStore, type CartItem } from "@/store/CartProvider";
-
-/* ─── WhatsApp Phone Number ─── */
-const WHATSAPP_PHONE = "52644519";
+import { useCartStore } from "@/store/CartProvider";
 
 /* ─── Form State ─── */
 
@@ -59,42 +56,6 @@ function OrderConfirmation() {
   );
 }
 
-/* ─── Format WhatsApp Message ─── */
-
-function formatWhatsAppMessage(form: CheckoutForm, items: CartItem[], totalPrice: number): string {
-  const lines: string[] = [];
-
-  lines.push("🛍 *New Order — AURA Studio*");
-  lines.push("");
-
-  // Customer info
-  lines.push("👤 *Customer Details*");
-  lines.push(`Name: ${form.fullName}`);
-  lines.push(`Phone: ${form.phone}`);
-  lines.push(`Address: ${form.address}`);
-  lines.push(`City: ${form.city}`);
-  if (form.notes) {
-    lines.push(`Notes: ${form.notes}`);
-  }
-  lines.push("");
-
-  // Items
-  lines.push("📦 *Order Items*");
-  lines.push("─".repeat(20));
-
-  items.forEach((item, index) => {
-    lines.push(`${index + 1}. ${item.name}`);
-    lines.push(`   Size: ${item.size} · Color: ${item.color}`);
-    lines.push(`   Qty: ${item.quantity} × $${item.price} = $${item.price * item.quantity}`);
-  });
-
-  lines.push("─".repeat(20));
-  lines.push("");
-  lines.push(`💰 *Grand Total: $${totalPrice}*`);
-
-  return lines.join("\n");
-}
-
 /* ─── Main Checkout Page ─── */
 
 export default function CheckoutPage() {
@@ -104,6 +65,8 @@ export default function CheckoutPage() {
   const [form, setForm] = useState<CheckoutForm>(initialForm);
   const [submitted, setSubmitted] = useState(false);
   const [errors, setErrors] = useState<Partial<Record<keyof CheckoutForm, string>>>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Redirect to home if cart is empty (and not just submitted)
   useEffect(() => {
@@ -133,22 +96,56 @@ export default function CheckoutPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validate()) return;
 
-    // Format message
-    const message = formatWhatsAppMessage(form, items, totalPrice);
+    setSubmitting(true);
+    setSubmitError(null);
 
-    // Encode and open WhatsApp
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${encodedMessage}`;
-    window.open(whatsappUrl, "_blank");
+    try {
+      const payload = {
+        customer: {
+          fullName: form.fullName,
+          phone: form.phone,
+          address: form.address,
+          city: form.city,
+          notes: form.notes,
+        },
+        items: items.map((item) => ({
+          productId: item.productId,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          size: item.size,
+          color: item.color,
+          image: item.image,
+        })),
+        totalPrice,
+        totalItems,
+      };
 
-    // Clear cart and show confirmation
-    clearCart();
-    setSubmitted(true);
+      const res = await fetch("/api/whatsapp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.error || "Failed to send order notification");
+      }
+
+      // Clear cart and show confirmation on success
+      clearCart();
+      setSubmitted(true);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      setSubmitError(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   // Show confirmation after order
@@ -380,19 +377,73 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {/* Error Message */}
+              {submitError && (
+                <div className="mt-6 flex items-start gap-3 rounded-xl border border-rose-200 bg-rose-50 p-4 dark:border-rose-900/30 dark:bg-rose-900/10">
+                  <svg
+                    className="mt-0.5 h-5 w-5 shrink-0 text-rose-600 dark:text-rose-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126ZM12 15.75h.007v.008H12v-.008Z"
+                    />
+                  </svg>
+                  <p className="text-sm text-rose-700 dark:text-rose-300">
+                    {submitError}
+                  </p>
+                </div>
+              )}
+
               {/* Place Order Button */}
               <button
                 type="submit"
-                className="mt-6 flex w-full items-center justify-center gap-2.5 rounded-full bg-emerald-600 px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-600/20 active:scale-[0.98]"
+                disabled={submitting}
+                className={`mt-6 flex w-full items-center justify-center gap-2.5 rounded-full px-6 py-3.5 text-sm font-semibold text-white transition-all duration-300 ${
+                  submitting
+                    ? "bg-emerald-400 cursor-not-allowed"
+                    : "bg-emerald-600 hover:bg-emerald-700 hover:shadow-lg hover:shadow-emerald-600/20 active:scale-[0.98]"
+                }`}
               >
-                <svg
-                  className="h-5 w-5"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-                </svg>
-                Place Order via WhatsApp
+                {submitting ? (
+                  <>
+                    <svg
+                      className="h-5 w-5 animate-spin"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      />
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                    Sending Order...
+                  </>
+                ) : (
+                  <>
+                    <svg
+                      className="h-5 w-5"
+                      fill="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                    </svg>
+                    Place Order
+                  </>
+                )}
               </button>
 
               {/* Back link */}
