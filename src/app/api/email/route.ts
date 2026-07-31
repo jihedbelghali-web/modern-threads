@@ -51,7 +51,7 @@ function formatOrderEmail(payload: OrderPayload): { subject: string; text: strin
 
   // Plain-text body
   const textLines: string[] = [];
-  textLines.push("🛍 New Order — AURA Studio");
+  textLines.push("🛍 New Order — MAISON BELGHALI");
   textLines.push("");
   textLines.push("👤 Customer Details");
   textLines.push(`Name: ${customer.fullName}`);
@@ -99,7 +99,7 @@ function formatOrderEmail(payload: OrderPayload): { subject: string; text: strin
     <div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:0 auto;background:#fafafa;padding:24px;">
       <div style="background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e5e5;">
         <div style="background:#111;color:#fff;padding:20px 24px;">
-          <h1 style="margin:0;font-size:18px;">🛍 New Order — AURA Studio</h1>
+          <h1 style="margin:0;font-size:18px;">🛍 New Order — MAISON BELGHALI</h1>
         </div>
         <div style="padding:24px;">
           <h2 style="margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:0.5px;color:#333;">Customer Details</h2>

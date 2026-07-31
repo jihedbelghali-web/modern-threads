@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AURA Studio — Conscious Luxury Essentials",
+  title: "MAISON BELGHALI — Conscious Luxury Essentials",
   description:
-    "Discover AURA Studio's thoughtfully designed collection of modern wardrobe staples. Organic materials, timeless design, artisan craftsmanship.",
+    "Discover MAISON BELGHALI's thoughtfully designed collection of modern wardrobe staples. Organic materials, timeless design, artisan craftsmanship.",
 };
 
 export default function RootLayout({

@@ -66,33 +66,38 @@ export default function Home() {
         <div className="relative mx-auto flex w-full max-w-7xl flex-col items-start gap-8 px-6 py-24 md:px-12 lg:flex-row lg:items-center lg:justify-between lg:py-0">
           {/* Text */}
           <div className="max-w-xl">
-            <span className="inline-block rounded-full border border-zinc-700 px-4 py-1.5 text-xs font-medium tracking-widest text-zinc-400 uppercase">
-              Spring–Summer 2026
-            </span>
-            <h1 className="mt-6 text-5xl font-bold leading-[1.08] tracking-tight text-white sm:text-6xl lg:text-7xl">
-              Clothes that
-              <br />
-              <span className="bg-gradient-to-r from-zinc-100 via-white to-zinc-300 bg-clip-text text-transparent">
-                mean something.
+            <div className="flex items-center gap-4">
+              <span className="h-px w-12 bg-neutral-600" aria-hidden="true" />
+              <span className="text-xs font-light tracking-[0.3em] text-neutral-400 uppercase">
+                Collection 2026
               </span>
+            </div>
+            <h1 className="mt-6 font-serif text-5xl font-light tracking-tight text-white md:text-6xl">
+              Tailored Elegance.
+              <br />
+              <span className="italic">Uncompromising Style.</span>
             </h1>
-            <p className="mt-4 max-w-md text-lg leading-relaxed text-zinc-400">
-              Thoughtfully designed essentials, crafted with intention. Discover a new standard of
-              modern wardrobe staples.
+            <p className="mt-6 max-w-md text-base leading-relaxed text-neutral-400 lg:text-lg">
+              Architectural silhouettes engineered with luxury textiles. Discover refined modern
+              staples crafted for distinction.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-10 flex flex-wrap gap-4">
               <a
                 href="/shop"
-                className="inline-flex items-center gap-2 rounded-full bg-white px-8 py-3 text-sm font-semibold text-zinc-900 transition-all duration-300 hover:bg-zinc-200 hover:shadow-lg"
+                className="inline-flex items-center gap-3 border border-zinc-600 bg-zinc-800 px-8 py-3.5 text-xs font-medium uppercase tracking-[0.2em] text-white transition-all duration-300 hover:border-zinc-400 hover:bg-zinc-700"
               >
-                Shop the Collection
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m9 4.5 6.75 6.75L9 18" />
+                Explore Collection
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
+                  />
                 </svg>
               </a>
               <a
                 href="#values"
-                className="inline-flex items-center gap-2 rounded-full border border-zinc-700 px-8 py-3 text-sm font-medium text-zinc-300 transition-all duration-300 hover:border-zinc-500 hover:text-white"
+                className="inline-flex items-center gap-2 border border-zinc-700/60 px-8 py-3.5 text-xs font-medium uppercase tracking-[0.2em] text-zinc-300 transition-all duration-300 hover:border-zinc-400 hover:text-white"
               >
                 Our Ethos
               </a>
@@ -101,15 +106,17 @@ export default function Home() {
 
           {/* Hero image */}
           <div className="relative mt-10 w-full max-w-sm lg:mt-0 lg:max-w-md">
-            <div className="aspect-[3/4] overflow-hidden rounded-3xl bg-zinc-800 shadow-2xl">
+            <div className="aspect-[3/4] overflow-hidden rounded-none border border-zinc-800 bg-zinc-800 shadow-2xl">
               <img
-                src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=600&q=80"
-                alt="AURA Studio collection"
+                src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200&auto=format&fit=crop"
+                alt="MAISON BELGHALI editorial campaign"
                 className="h-full w-full object-cover"
+                loading="eager"
+                fetchPriority="high"
               />
             </div>
             {/* Floating stat */}
-            <div className="absolute -bottom-4 -left-4 rounded-2xl border border-zinc-800 bg-zinc-950/80 px-5 py-3 backdrop-blur-md">
+            <div className="absolute -bottom-4 -left-4 rounded-none border border-zinc-800 bg-zinc-950/80 px-5 py-3 backdrop-blur-md">
               <p className="text-sm font-medium text-white">New Arrivals</p>
               <p className="text-2xl font-bold text-white">24</p>
             </div>
@@ -188,7 +195,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto max-w-xl text-center">
             <span className="text-xs font-semibold tracking-[0.2em] text-zinc-400 uppercase">
-              Why AURA
+              Why MAISON BELGHALI
             </span>
             <h2 className="mt-2 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-50">
               Built on purpose.
@@ -223,7 +230,7 @@ export default function Home() {
       <section className="bg-zinc-950 px-6 py-20 md:px-12">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Join the AURA community
+            Join the MAISON BELGHALI community
           </h2>
           <p className="mt-4 text-base leading-relaxed text-zinc-400">
             Be the first to know about new drops, limited editions, and conscious fashion stories.
@@ -253,7 +260,7 @@ export default function Home() {
       <footer className="border-t border-zinc-800 bg-zinc-950 px-6 py-10 md:px-12">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-sm text-zinc-500">
-            &copy; {new Date().getFullYear()} AURA Studio. All rights reserved.
+            &copy; {new Date().getFullYear()} MAISON BELGHALI. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-zinc-500">
             <a href="#" className="transition-colors hover:text-zinc-300">
