@@ -62,91 +62,82 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* ──────────────── Hero ──────────────── */}
-      <section className="relative overflow-hidden bg-white dark:bg-zinc-950">
-        {/* Background pattern */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.04]">
+      <section className="relative flex min-h-[92vh] items-center overflow-hidden bg-neutral-950">
+        {/* Full-bleed background */}
+        <div className="absolute inset-0" aria-hidden="true">
+          <img
+            src="https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?q=80&w=2000&auto=format&fit=crop"
+            alt=""
+            className="h-full w-full object-cover object-top"
+            loading="eager"
+            fetchPriority="high"
+          />
+          <div className="absolute inset-0 bg-neutral-950/35" />
+          <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/60 via-transparent to-neutral-950/70" />
+          {/* Subtle spotlight behind the 3D headline for legibility */}
           <div
-            className="h-full w-full"
+            className="pointer-events-none absolute inset-x-0 top-1/2 z-[5] mx-auto h-[70%] max-w-4xl -translate-y-1/2"
             style={{
-              backgroundImage:
-                "radial-gradient(circle at 25% 50%, #18181b 0.5px, transparent 0.5px)",
-              backgroundSize: "48px 48px",
+              background:
+                "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(255,255,255,0.22), transparent 72%)",
             }}
           />
         </div>
 
-        <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-6 py-16 md:px-12 lg:grid-cols-2 lg:gap-16 lg:py-24">
-          {/* Text */}
-          <div className="order-2 lg:order-1">
-            <div className="flex items-center gap-4">
-              <span className="h-px w-12 bg-zinc-950" aria-hidden="true" />
-              <span className="text-xs font-semibold tracking-[0.3em] text-zinc-500 uppercase dark:text-zinc-400">
-                Nouvelle Collection — 2026
-              </span>
-            </div>
-            <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-zinc-950 uppercase sm:text-5xl lg:text-6xl dark:text-zinc-50">
-              Nouvelle Collection
-              <br />
-              Homme <span className="text-rose-600">2026</span>
-            </h1>
-            <p className="mt-6 max-w-md text-base leading-relaxed text-zinc-500 lg:text-lg dark:text-zinc-400">
-              Style moderne &amp; Élégance au quotidien. Des coupes précises, des matières
-              nobles et des pièces pensées pour l&apos;homme tunisien exigeant.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link
-                href="/shop"
-                className="group inline-flex items-center gap-3 bg-zinc-950 px-8 py-4 text-xs font-bold tracking-[0.2em] text-white uppercase transition-all duration-300 hover:bg-zinc-800 hover:shadow-xl hover:shadow-zinc-950/20"
-              >
-                Découvrir la collection
-                <svg
-                  className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={1.5}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M17.25 8.25 21 12m0 0-3.75 3.75M21 12H3"
-                  />
-                </svg>
-              </Link>
-              <Link
-                href="/shop?promo=1"
-                className="inline-flex items-center gap-2 border border-zinc-300 px-8 py-4 text-xs font-bold tracking-[0.2em] text-zinc-700 uppercase transition-all duration-300 hover:border-zinc-950 hover:text-zinc-950 dark:border-zinc-700 dark:text-zinc-300 dark:hover:border-zinc-100 dark:hover:text-zinc-50"
-              >
-                Voir les promotions
-              </Link>
-            </div>
+        {/* Carousel navigation arrows */}
+        <button
+          type="button"
+          className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-neutral-800/60 p-2.5 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-neutral-800/90 sm:left-6 sm:p-3"
+          aria-label="Précédent"
+        >
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-neutral-800/60 p-2.5 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-neutral-800/90 sm:right-6 sm:p-3"
+          aria-label="Suivant"
+        >
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+
+        {/* Content */}
+        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24 text-center md:px-12">
+          {/* Floating glass badge */}
+          <div className="mb-8 flex justify-center">
+            <Link
+              href="/shop"
+              className="animate-fade-in inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-6 py-1.5 text-xs font-semibold uppercase tracking-widest text-gold-300 backdrop-blur-md transition-colors duration-300 hover:bg-white/25"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-[#D4A359]" aria-hidden="true" />
+              Voir Plus
+            </Link>
           </div>
 
-          {/* Hero image */}
-          <div className="relative order-1 lg:order-2">
-            <div className="relative aspect-[4/5] w-full overflow-hidden bg-zinc-100 lg:ml-auto lg:max-w-md">
-              <img
-                src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200&auto=format&fit=crop"
-                alt="Campagne MAISON BELGHALI — collection homme 2026"
-                className="h-full w-full object-cover"
-                loading="eager"
-                fetchPriority="high"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/30 to-transparent" />
-            </div>
-            {/* Floating stat cards */}
-            <div className="absolute -left-4 bottom-8 hidden border border-zinc-100 bg-white px-5 py-4 shadow-xl sm:block dark:border-zinc-800 dark:bg-zinc-900">
-              <p className="text-[11px] font-semibold tracking-widest text-zinc-400 uppercase dark:text-zinc-500">
-                Paiement à la livraison
-              </p>
-              <p className="mt-1 text-sm font-bold text-zinc-950 dark:text-zinc-50">Disponible en Tunisie</p>
-            </div>
-            <div className="absolute -right-3 top-8 hidden bg-zinc-950 px-5 py-4 sm:block">
-              <p className="text-[11px] font-semibold tracking-widest text-zinc-400 uppercase">
-                Livraison express
-              </p>
-              <p className="mt-1 text-sm font-bold text-white">24–48h</p>
-            </div>
+          {/* 3D Main Headline */}
+          <h1 className="text-4xl font-black uppercase tracking-tight text-neutral-900 [text-shadow:_0_4px_16px_rgba(0,0,0,0.8),_0_2px_0_#ffffff] md:text-7xl">
+            New Collection
+            <br />
+            Summer
+          </h1>
+
+          {/* Subtitle */}
+          <p className="mx-auto mt-6 max-w-2xl text-sm font-bold uppercase tracking-[0.3em] text-white [text-shadow:_0_2px_10px_rgba(0,0,0,0.9)] md:text-base">
+            Oversized T-Shirt Urban Wear
+          </p>
+
+          {/* Primary action */}
+          <div className="mt-10">
+            <Link
+              href="/shop"
+              className="inline-flex items-center gap-2 rounded-full bg-[#D4A359] px-8 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-[#D4A359]/30"
+            >
+              Voir Plus
+              <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
       </section>

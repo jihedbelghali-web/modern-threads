@@ -5,6 +5,12 @@
   --font-mono: var(--font-geist-mono);
 }
 
+@theme {
+  --color-gold-300: #e9c98f;
+  --color-gold-400: #ddb471;
+  --color-gold-500: #d4a359;
+}
+
 html {
   scroll-behavior: smooth;
 }

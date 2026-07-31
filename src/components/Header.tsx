@@ -25,24 +25,21 @@ export default function Header() {
   return (
     <>
       {/* ── Announcement bar ── */}
-      <div className="bg-zinc-950 px-4 py-2 text-center">
+      <div className="bg-neutral-950 px-4 py-2 text-center">
         <p className="text-[11px] font-semibold tracking-[0.18em] text-white uppercase sm:text-xs">
           Livraison en 24/48h sur toute la Tunisie
-          <span className="mx-2 text-zinc-500 sm:mx-3">|</span>
+          <span className="mx-2 text-[#D4A359] sm:mx-3">|</span>
           Paiement à la livraison
         </p>
       </div>
 
       {/* ── Main navbar ── */}
-      <header className="sticky top-0 z-30 border-b border-zinc-200 bg-white/85 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/85">
+      <header className="sticky top-0 z-30 border-b border-[#D4A359]/60 bg-neutral-950">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4 md:px-12">
           {/* Logo */}
-          <Link href="/" className="flex shrink-0 items-center gap-2.5">
-            <span className="flex h-9 w-9 items-center justify-center bg-zinc-950 text-white dark:bg-white dark:text-zinc-950">
-              <span className="font-serif text-lg font-bold leading-none">B</span>
-            </span>
-            <span className="text-base font-extrabold uppercase tracking-[0.16em] text-zinc-950 sm:text-lg dark:text-white">
-              Maison Belghali
+          <Link href="/" className="flex shrink-0 items-center">
+            <span className="text-lg font-black uppercase tracking-[0.2em] text-[#D4A359] sm:text-xl">
+              Belghali
             </span>
           </Link>
 
@@ -52,10 +49,10 @@ export default function Header() {
               <Link
                 key={link.label}
                 href={link.href}
-                className="group relative text-[13px] font-semibold uppercase tracking-wider text-zinc-700 transition-colors hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+                className="group relative text-[13px] font-semibold uppercase tracking-wider text-zinc-300 transition-colors hover:text-[#D4A359]"
               >
                 {link.label}
-                <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 bg-zinc-950 transition-all duration-300 group-hover:w-full dark:bg-white" />
+                <span className="absolute -bottom-1.5 left-0 h-0.5 w-0 bg-[#D4A359] transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
           </nav>
@@ -65,7 +62,7 @@ export default function Header() {
             {/* Mobile menu toggle */}
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              className="rounded-lg p-2 text-zinc-700 transition-colors hover:bg-zinc-100 lg:hidden dark:text-zinc-300 dark:hover:bg-zinc-800"
+              className="rounded-lg p-2 text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-white lg:hidden"
               aria-label="Toggle menu"
               aria-expanded={menuOpen}
             >
@@ -83,7 +80,7 @@ export default function Header() {
             {/* Cart icon */}
             <button
               onClick={() => setCartOpen(true)}
-              className="relative rounded-lg p-2 text-zinc-700 transition-colors hover:bg-zinc-100 hover:text-zinc-950 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+              className="relative rounded-lg p-2 text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-[#D4A359]"
               aria-label="Open cart"
             >
               <svg
@@ -101,7 +98,7 @@ export default function Header() {
               </svg>
               {/* Badge */}
               {totalItems > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-zinc-950 text-[10px] font-bold text-white dark:bg-white dark:text-zinc-950">
+                <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#D4A359] text-[10px] font-bold text-neutral-950">
                   {totalItems > 99 ? "99+" : totalItems}
                 </span>
               )}
@@ -111,14 +108,14 @@ export default function Header() {
 
         {/* Mobile nav panel */}
         {menuOpen && (
-          <nav className="border-t border-zinc-200 bg-white px-6 py-4 lg:hidden dark:border-zinc-800 dark:bg-zinc-950">
+          <nav className="border-t border-[#D4A359]/60 bg-neutral-950 px-6 py-4 lg:hidden">
             <div className="flex flex-col gap-3">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="py-1 text-sm font-semibold uppercase tracking-wider text-zinc-700 transition-colors hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white"
+                  className="py-1 text-sm font-semibold uppercase tracking-wider text-zinc-300 transition-colors hover:text-[#D4A359]"
                 >
                   {link.label}
                 </Link>
