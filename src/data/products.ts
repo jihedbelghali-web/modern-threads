@@ -20,6 +20,8 @@ export interface Product {
 function slugify(name: string): string {
   return name
     .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 }
@@ -27,324 +29,323 @@ function slugify(name: string): string {
 const rawProducts: Omit<Product, "slug">[] = [
   {
     id: 1,
-    name: "Linen Relaxed Blazer",
-    category: "Outerwear",
-    tags: ["Minimal Outerwear", "Essentials"],
-    price: 228,
-    originalPrice: 285,
+    name: "Chemise en Lin Premium",
+    category: "Chemises",
+    tags: ["Essentiel", "Moderne"],
+    price: 89,
+    originalPrice: 120,
+    images: [
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=80",
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=600&q=80",
+      "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=600&q=80",
+    ],
+    description:
+      "Chemise en lin 100% premium à coupe moderne. Respirante et fluide, idéale pour un look élégant et décontracté, du bureau aux soirées d'été.",
+    badge: "Promo",
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      { name: "Blanc", hex: "#f5f5f5" },
+      { name: "Bleu Ciel", hex: "#a8c4d8" },
+      { name: "Écru", hex: "#e8dcc8" },
+    ],
+    stock: 18,
+    rating: 4.7,
+    fabricCare:
+      "100% lin européen. Lavage machine à froid, cycle doux, séchage à l'air libre. Repassage vapeur à température moyenne. Ne pas javelliser.",
+    shippingPolicy:
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
+  },
+  {
+    id: 2,
+    name: "Chemise Oxford Slim",
+    category: "Chemises",
+    tags: ["Essentiel", "Classique"],
+    price: 95,
+    images: [
+      "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?w=600&q=80",
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=80",
+      "https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=600&q=80",
+    ],
+    description:
+      "L'indispensable chemise Oxford en coton peigné, coupe slim ajustée. Un classique intemporel qui se porte en toute occasion.",
+    badge: "Nouveau",
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      { name: "Blanc", hex: "#f5f5f5" },
+      { name: "Bleu Marine", hex: "#1b2a4a" },
+      { name: "Rose Pâle", hex: "#e8c8c0" },
+    ],
+    stock: 25,
+    rating: 4.8,
+    fabricCare:
+      "100% coton peigné. Lavage machine à 30°C, séchage à l'air libre. Repassage à température moyenne pour un rendu impeccable.",
+    shippingPolicy:
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
+  },
+  {
+    id: 3,
+    name: "Chemise Coton Élégante",
+    category: "Chemises",
+    tags: ["Essentiel", "Moderne"],
+    price: 79,
+    images: [
+      "https://images.unsplash.com/photo-1620012253295-c15cc3e65df4?w=600&q=80",
+      "https://images.unsplash.com/photo-1603252109303-2751441dd157?w=600&q=80",
+      "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600&q=80",
+    ],
+    description:
+      "Chemise en coton gaufré à la fois légère et structurée. Parfaite pour un style raffiné au quotidien, seule ou sous un costume.",
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      { name: "Blanc", hex: "#f5f5f5" },
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Gris Clair", hex: "#d6d6d6" },
+    ],
+    stock: 30,
+    rating: 4.5,
+    fabricCare:
+      "100% coton. Lavage machine à 30°C, cycle délicat. Repassage à température moyenne, de préférence sur coton légèrement humide.",
+    shippingPolicy:
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
+  },
+  {
+    id: 4,
+    name: "Pantalon Chino Cintré",
+    category: "Pantalons",
+    tags: ["Essentiel", "Classique"],
+    price: 98,
+    images: [
+      "https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=600&q=80",
+      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80",
+      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&q=80",
+    ],
+    description:
+      "Chino en coton stretch à coupe cintrée. Un pantalon polyvalent, chic et confortable, l'allié parfait de votre garde-robe.",
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      { name: "Kaki", hex: "#8a7a5c" },
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Bleu Nuit", hex: "#232a3a" },
+    ],
+    stock: 22,
+    rating: 4.6,
+    fabricCare:
+      "98% coton, 2% élasthanne. Lavage machine à 30°C, retourné. Repassage à température moyenne. Ne pas utiliser de sèche-linge.",
+    shippingPolicy:
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
+  },
+  {
+    id: 5,
+    name: "Jean Slim Homme",
+    category: "Pantalons",
+    tags: ["Essentiel", "Moderne"],
+    price: 110,
+    originalPrice: 135,
+    images: [
+      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&q=80",
+      "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=600&q=80",
+      "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?w=600&q=80",
+    ],
+    description:
+      "Jean slim en denim brut avec une légère élasticité pour un confort absolu. Une coupe moderne qui affine la silhouette.",
+    badge: "Promo",
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      { name: "Indigo", hex: "#26466d" },
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Bleu Moyen", hex: "#5d7ea3" },
+    ],
+    stock: 35,
+    rating: 4.7,
+    fabricCare:
+      "99% coton, 1% élasthanne. Lavage machine à 30°C à l'envers, séchage à l'air libre. Laver rarement pour préserver la couleur.",
+    shippingPolicy:
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
+  },
+  {
+    id: 6,
+    name: "Pantalon de Costume",
+    category: "Pantalons",
+    tags: ["Élégance"],
+    price: 120,
+    images: [
+      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&q=80",
+      "https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=600&q=80",
+      "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=600&q=80",
+    ],
+    description:
+      "Pantalon de costume à coupe droite et taille ajustée, en tissu premium. Le compagnon idéal de vos costumes et vestes.",
+    badge: "Nouveau",
+    sizes: ["S", "M", "L", "XL"],
+    colors: [
+      { name: "Anthracite", hex: "#3a3a3a" },
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Bleu Marine", hex: "#1b2a4a" },
+    ],
+    stock: 14,
+    rating: 4.6,
+    fabricCare:
+      "70% polyester, 30% viscose. Nettoyage à sec recommandé. Repassage à vapeur à basse température.",
+    shippingPolicy:
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
+  },
+  {
+    id: 7,
+    name: "Costume 2 Pièces Slim",
+    category: "Costumes",
+    tags: ["Élégance", "Classique"],
+    price: 390,
+    originalPrice: 450,
     images: [
       "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80",
       "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=600&q=80",
       "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?w=600&q=80",
     ],
     description:
-      "An unstructured blazer cut from heavyweight linen. Features a relaxed fit with notch lapels and patch pockets.",
-    badge: "Best Seller",
+      "Costume deux pièces à coupe slim : veste ajustée et pantalon droit. Confectionné dans un tissu italien haut de gamme pour un tombé impeccable.",
+    badge: "Promo",
     sizes: ["S", "M", "L", "XL"],
     colors: [
-      { name: "Oatmeal", hex: "#e8dcc8" },
-      { name: "Charcoal", hex: "#4a4a4a" },
-      { name: "Sage", hex: "#a8b5a0" },
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Bleu Marine", hex: "#1b2a4a" },
+      { name: "Gris Perle", hex: "#c8c8c8" },
     ],
-    stock: 18,
-    rating: 4.7,
-    fabricCare:
-      "100% European linen. Machine wash cold on a gentle cycle, tumble dry low, and steam iron on medium heat. Do not bleach. Dry cleaning recommended to preserve the fabric structure.",
-    shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
-  },
-  {
-    id: 2,
-    name: "Silk Midi Dress",
-    category: "Dresses",
-    tags: ["Essentials"],
-    price: 340,
-    images: [
-      "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=600&q=80",
-      "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?w=600&q=80",
-      "https://images.unsplash.com/photo-1612336307429-8a898d10e223?w=600&q=80",
-    ],
-    description:
-      "Effortlessly elegant midi dress in pure silk charmeuse. Bias-cut for a fluid drape that moves with you.",
-    badge: "New",
-    sizes: ["S", "M", "L"],
-    colors: [
-      { name: "Black", hex: "#1a1a1a" },
-      { name: "Ivory", hex: "#f5f0e8" },
-      { name: "Dusty Rose", hex: "#c9a9a0" },
-    ],
-    stock: 7,
+    stock: 8,
     rating: 4.9,
     fabricCare:
-      "100% Mulberry silk. Dry clean only. Store flat or on a padded hanger away from direct sunlight to prevent fading.",
+      "Tissu italien : 55% laine, 45% polyester. Nettoyage à sec uniquement. Suspendre sur cintre rembourré pour préserver la coupe.",
     shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
-  },
-  {
-    id: 3,
-    name: "Wool Cashmere Coat",
-    category: "Outerwear",
-    tags: ["Minimal Outerwear"],
-    price: 520,
-    originalPrice: 650,
-    images: [
-      "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=600&q=80",
-      "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=600&q=80",
-      "https://images.unsplash.com/photo-1608236415050-1d1a5eee8de8?w=600&q=80",
-    ],
-    description:
-      "A classic double-breasted coat in a wool-cashmere blend. Tailored silhouette with a self-belt closure.",
-    sizes: ["S", "M", "L", "XL"],
-    colors: [
-      { name: "Camel", hex: "#c9a96e" },
-      { name: "Black", hex: "#1a1a1a" },
-      { name: "Grey Melange", hex: "#8a8a8a" },
-    ],
-    stock: 5,
-    rating: 4.8,
-    fabricCare:
-      "70% wool, 30% cashmere. Dry clean only. Store on a wide padded hanger and use a garment bag for long-term storage.",
-    shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
-  },
-  {
-    id: 4,
-    name: "Recycled Nylon Tote",
-    category: "Accessories",
-    tags: ["Streetwear", "Essentials"],
-    price: 185,
-    images: [
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600&q=80",
-      "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&q=80",
-      "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=600&q=80",
-    ],
-    description:
-      "Everyday carry tote crafted from recycled nylon twill. Water-resistant with an interior zip pocket.",
-    badge: "Eco",
-    sizes: ["One Size"],
-    colors: [
-      { name: "Black", hex: "#1a1a1a" },
-      { name: "Olive", hex: "#6b7c5e" },
-      { name: "Sand", hex: "#d4c5a9" },
-    ],
-    stock: 24,
-    rating: 4.5,
-    fabricCare:
-      "100% recycled nylon (ECONYL®). Spot clean with mild soap and damp cloth. Machine wash cold on delicate if needed — air dry only.",
-    shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
-  },
-  {
-    id: 5,
-    name: "Organic Cotton Denim",
-    category: "Bottoms",
-    tags: ["Streetwear", "Essentials"],
-    price: 148,
-    images: [
-      "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?w=600&q=80",
-      "https://images.unsplash.com/photo-1604176354204-9268737828e4?w=600&q=80",
-      "https://images.unsplash.com/photo-1555689502-c4b22d76c56f?w=600&q=80",
-    ],
-    description:
-      "High-rise straight-leg jeans in organic cotton denim. Rigid with a hint of stretch for all-day comfort.",
-    sizes: ["S", "M", "L", "XL"],
-    colors: [
-      { name: "Indigo", hex: "#26466d" },
-      { name: "Black", hex: "#1a1a1a" },
-      { name: "Stone Wash", hex: "#8a9ba8" },
-    ],
-    stock: 32,
-    rating: 4.6,
-    fabricCare:
-      "100% organic cotton denim. Machine wash cold inside out, hang dry. Wash sparingly to preserve color and reduce environmental impact.",
-    shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
-  },
-  {
-    id: 6,
-    name: "Merino Crew Sweater",
-    category: "Knitwear",
-    tags: ["Minimal Outerwear", "Essentials"],
-    price: 195,
-    images: [
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80",
-      "https://images.unsplash.com/photo-1434389677669-e08b4cda3a12?w=600&q=80",
-      "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&q=80",
-    ],
-    description:
-      "Fine-gauge merino wool crewneck with ribbed cuffs and hem. Lightweight yet insulating for transitional layering.",
-    badge: "Limited",
-    sizes: ["S", "M", "L", "XL"],
-    colors: [
-      { name: "Cream", hex: "#f5eedc" },
-      { name: "Navy", hex: "#1b2a4a" },
-      { name: "Burgundy", hex: "#6e2c3d" },
-    ],
-    stock: 11,
-    rating: 4.7,
-    fabricCare:
-      "100% extra-fine merino wool. Hand wash cold with wool-specific detergent, lay flat to dry. Do not wring. Store folded to maintain shape.",
-    shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
-  },
-  {
-    id: 7,
-    name: "Leather Crossbody Bag",
-    category: "Accessories",
-    tags: ["Streetwear"],
-    price: 275,
-    images: [
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80",
-      "https://images.unsplash.com/photo-1564309098800-9e00c5907b23?w=600&q=80",
-      "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&q=80",
-    ],
-    description:
-      "Grain leather crossbody with an adjustable strap and magnetic snap closure. Fits essentials with room to spare.",
-    sizes: ["One Size"],
-    colors: [
-      { name: "Tobacco", hex: "#b87a3e" },
-      { name: "Black", hex: "#1a1a1a" },
-    ],
-    stock: 9,
-    rating: 4.4,
-    fabricCare:
-      "Full-grain calf leather. Wipe clean with a damp cloth. Condition every 3–6 months with a leather balm. Avoid prolonged exposure to rain.",
-    shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
   },
   {
     id: 8,
-    name: "Linen Wide-Leg Trousers",
-    category: "Bottoms",
-    tags: ["Minimal Outerwear", "Essentials"],
-    price: 168,
-    originalPrice: 210,
+    name: "Costume Mariage Premium",
+    category: "Costumes",
+    tags: ["Élégance", "Moderne"],
+    price: 420,
     images: [
-      "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=600&q=80",
-      "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=600&q=80",
-      "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=600&q=80",
-    ],
-    description:
-      "Effortless wide-leg trousers in washed linen. Elasticated waist with a drawstring for the perfect fit.",
-    badge: "Sale",
-    sizes: ["S", "M", "L", "XL"],
-    colors: [
-      { name: "Natural", hex: "#e3d9c5" },
-      { name: "Black", hex: "#1a1a1a" },
-      { name: "Olive", hex: "#6b7c5e" },
-    ],
-    stock: 15,
-    rating: 4.3,
-    fabricCare:
-      "100% European linen. Machine wash cold on gentle cycle, tumble dry low. Iron on medium heat while slightly damp for best results.",
-    shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
-  },
-  {
-    id: 9,
-    name: "Oversized Hoodie",
-    category: "Knitwear",
-    tags: ["Streetwear"],
-    price: 120,
-    images: [
-      "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=600&q=80",
-      "https://images.unsplash.com/photo-1578768079052-aa76e52ff62e?w=600&q=80",
-      "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600&q=80",
-    ],
-    description:
-      "A heavyweight oversized hoodie in brushed organic cotton fleece. Dropped shoulders, ribbed cuffs, and a kangaroo pocket.",
-    badge: "New",
-    sizes: ["S", "M", "L", "XL"],
-    colors: [
-      { name: "Heather Grey", hex: "#b8b8b8" },
-      { name: "Black", hex: "#1a1a1a" },
-      { name: "Forest", hex: "#2d4a3e" },
-    ],
-    stock: 28,
-    rating: 4.8,
-    fabricCare:
-      "100% organic cotton fleece. Machine wash cold inside out, tumble dry low. Avoid fabric softener to maintain the fleece texture.",
-    shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
-  },
-  {
-    id: 10,
-    name: "Tailored Trench Coat",
-    category: "Outerwear",
-    tags: ["Minimal Outerwear"],
-    price: 480,
-    originalPrice: 580,
-    images: [
-      "https://images.unsplash.com/photo-1608236415050-1d1a5eee8de8?w=600&q=80",
-      "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=600&q=80",
+      "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?w=600&q=80",
+      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80",
       "https://images.unsplash.com/photo-1539533113208-f6df8cc8b543?w=600&q=80",
     ],
     description:
-      "A modern take on the iconic trench. Water-repellent cotton gabardine with a removable belt and storm flaps.",
-    badge: "Sale",
+      "Le costume signature pour les grandes occasions. Coupe précise, épaules nettes et finitions soignées pour un mariage inoubliable.",
+    badge: "Nouveau",
     sizes: ["S", "M", "L", "XL"],
     colors: [
-      { name: "Stone", hex: "#c4b99a" },
-      { name: "Black", hex: "#1a1a1a" },
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Bleu Nuit", hex: "#232a3a" },
+      { name: "Bordeaux", hex: "#6e2c3d" },
     ],
-    stock: 3,
+    stock: 5,
     rating: 4.9,
     fabricCare:
-      "100% cotton gabardine with DWR finish. Dry clean only. Re-apply water-repellent treatment after 5–6 washes to maintain performance.",
+      "60% laine vierge, 40% polyester. Nettoyage à sec uniquement. Repassage vapeur à basse température. Utiliser un cintre rembourré.",
     shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
   },
   {
-    id: 11,
-    name: "Organic Cotton Tee Pack",
-    category: "Tops",
-    tags: ["Essentials", "Streetwear"],
-    price: 65,
+    id: 9,
+    name: "Blazer Cintré Homme",
+    category: "Costumes",
+    tags: ["Élégance"],
+    price: 240,
     images: [
-      "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&q=80",
-      "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=600&q=80",
-      "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=600&q=80",
+      "https://images.unsplash.com/photo-1593030761757-71fae45fa0e7?w=600&q=80",
+      "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?w=600&q=80",
+      "https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80",
     ],
     description:
-      "Three-pack of heavyweight organic cotton crew tees. Pre-shrunk, garment-dyed, and built to last through endless rotations.",
-    badge: "Best Seller",
+      "Blazer cintré en tissu souple, boutonnage deux boutons et poches à rabat. S'adapte aussi bien aux tenues de bureau qu'aux sorties.",
     sizes: ["S", "M", "L", "XL"],
     colors: [
-      { name: "White / Black / Grey", hex: "#f0f0f0" },
-      { name: "Oatmeal / Sage / Clay", hex: "#e8dcc8" },
+      { name: "Bleu Marine", hex: "#1b2a4a" },
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Beige", hex: "#d4c5a9" },
     ],
-    stock: 42,
-    rating: 4.6,
+    stock: 12,
+    rating: 4.7,
     fabricCare:
-      "100% organic cotton, 220 gsm. Machine wash cold, tumble dry medium. Garment-dyed — wash separately for the first cycle.",
+      "68% polyester, 32% viscose. Nettoyage à sec recommandé. Repassage à vapeur à basse température pour un rendu impeccable.",
     shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
   },
   {
-    id: 12,
-    name: "Wool Beanie",
-    category: "Accessories",
-    tags: ["Streetwear", "Essentials"],
-    price: 48,
+    id: 10,
+    name: "Ceinture Cuir Véritable",
+    category: "Accessoires",
+    tags: ["Classique", "Essentiel"],
+    price: 45,
     images: [
-      "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?w=600&q=80",
-      "https://images.unsplash.com/photo-1597931752512-0e84c7e9cc33?w=600&q=80",
+      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80",
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80",
       "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?w=600&q=80",
     ],
     description:
-      "A ribbed-knit beanie in heavyweight wool. Double-layered cuff for extra warmth and a clean finish.",
+      "Ceinture en cuir véritable à boucle automatique. Un accessoire essentiel qui apporte la touche finale à toute tenue.",
     sizes: ["One Size"],
     colors: [
-      { name: "Charcoal", hex: "#4a4a4a" },
-      { name: "Cream", hex: "#f5eedc" },
-      { name: "Burgundy", hex: "#6e2c3d" },
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Marron", hex: "#8a5a2b" },
     ],
-    stock: 36,
+    stock: 40,
     rating: 4.5,
     fabricCare:
-      "100% wool. Hand wash cold, lay flat to dry. Do not wring — reshape while damp.",
+      "Cuir véritable. Nettoyer avec un chiffon doux et légèrement humide. Nourrir le cuir tous les 3 mois avec un baume adapté.",
     shippingPolicy:
-      "Free standard shipping on all orders over $200. Express delivery available for $15. Returns accepted within 30 days of delivery in unworn condition with tags attached.",
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
+  },
+  {
+    id: 11,
+    name: "Montre Classique Homme",
+    category: "Accessoires",
+    tags: ["Classique", "Élégance"],
+    price: 150,
+    images: [
+      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=600&q=80",
+      "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=600&q=80",
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=600&q=80",
+    ],
+    description:
+      "Montre classique au cadran minimaliste avec bracelet en cuir. Un accessoire d'élégance intemporelle qui traverse les saisons.",
+    badge: "Nouveau",
+    sizes: ["One Size"],
+    colors: [
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Marron", hex: "#8a5a2b" },
+    ],
+    stock: 10,
+    rating: 4.6,
+    fabricCare:
+      "Bracelet en cuir véritable, cadran minéral. Éviter le contact prolongé avec l'eau. Nettoyer le bracelet avec un chiffon doux.",
+    shippingPolicy:
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
+  },
+  {
+    id: 12,
+    name: "Cravate en Soie",
+    category: "Accessoires",
+    tags: ["Élégance"],
+    price: 39,
+    images: [
+      "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=600&q=80",
+      "https://images.unsplash.com/photo-1520903920243-00d872a2d1c9?w=600&q=80",
+      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=600&q=80",
+    ],
+    description:
+      "Cravate en soie douce au motif discret. La touche raffinée qui complète costume, chemise et blazer avec caractère.",
+    sizes: ["One Size"],
+    colors: [
+      { name: "Noir", hex: "#1a1a1a" },
+      { name: "Bleu Marine", hex: "#1b2a4a" },
+      { name: "Bordeaux", hex: "#6e2c3d" },
+    ],
+    stock: 28,
+    rating: 4.4,
+    fabricCare:
+      "100% soie. Nettoyage à sec uniquement. Défaire le nœud après chaque port et suspendre pour éviter les plis.",
+    shippingPolicy:
+      "Livraison express en 24/48h sur toute la Tunisie. Paiement à la livraison disponible. Échange ou retour sous 7 jours.",
   },
 ];
 

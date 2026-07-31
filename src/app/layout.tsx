@@ -15,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MAISON BELGHALI — Conscious Luxury Essentials",
+  title: "MAISON BELGHALI — Prêt-à-Porter Homme en Tunisie",
   description:
-    "Discover MAISON BELGHALI's thoughtfully designed collection of modern wardrobe staples. Organic materials, timeless design, artisan craftsmanship.",
+    "Découvrez la nouvelle collection homme 2026 de MAISON BELGHALI : chemises, pantalons, costumes et accessoires. Livraison 24/48h et paiement à la livraison sur toute la Tunisie.",
 };
 
 export default function RootLayout({
@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="fr"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">

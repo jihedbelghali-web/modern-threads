@@ -40,17 +40,17 @@ function OrderConfirmation() {
         </svg>
       </div>
       <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-        Order Confirmed!
+        Commande confirmée !
       </h1>
       <p className="max-w-md text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
-        Thank you for your order. We&apos;ve received it via email and will process it shortly.
-        You&apos;ll receive a confirmation message soon.
+        Merci pour votre commande. Notre équipe l&apos;a bien reçue et la traitera rapidement.
+        Vous recevrez une confirmation par e-mail et par téléphone.
       </p>
       <Link
         href="/shop"
-        className="mt-4 rounded-full bg-zinc-900 px-8 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+        className="mt-4 rounded-full bg-zinc-950 px-8 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-zinc-700 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
       >
-        Continue Shopping
+        Continuer mes achats
       </Link>
     </div>
   );
@@ -87,10 +87,10 @@ export default function CheckoutPage() {
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof CheckoutForm, string>> = {};
 
-    if (!form.fullName.trim()) newErrors.fullName = "Full name is required";
-    if (!form.phone.trim()) newErrors.phone = "Phone number is required";
-    if (!form.address.trim()) newErrors.address = "Delivery address is required";
-    if (!form.city.trim()) newErrors.city = "City is required";
+    if (!form.fullName.trim()) newErrors.fullName = "Le nom complet est requis";
+    if (!form.phone.trim()) newErrors.phone = "Le numéro de téléphone est requis";
+    if (!form.address.trim()) newErrors.address = "L'adresse de livraison est requise";
+    if (!form.city.trim()) newErrors.city = "La ville est requise";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -141,7 +141,7 @@ export default function CheckoutPage() {
       clearCart();
       setSubmitted(true);
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      const message = err instanceof Error ? err.message : "Une erreur est survenue. Veuillez réessayer.";
       setSubmitError(message);
     } finally {
       setSubmitting(false);
@@ -165,20 +165,20 @@ export default function CheckoutPage() {
         <div className="mx-auto max-w-6xl">
           <div className="flex items-center gap-2 text-xs text-zinc-400">
             <Link href="/" className="hover:text-zinc-600 dark:hover:text-zinc-300">
-              Home
+              Accueil
             </Link>
             <span>/</span>
             <Link href="/shop" className="hover:text-zinc-600 dark:hover:text-zinc-300">
-              Shop
+              Boutique
             </Link>
             <span>/</span>
-            <span className="text-zinc-600 dark:text-zinc-400">Checkout</span>
+            <span className="text-zinc-600 dark:text-zinc-400">Commande</span>
           </div>
           <h1 className="mt-4 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-50">
-            Checkout
+            Commande
           </h1>
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-            Complete your order details below. We&apos;ll email your order directly to our team.
+            Renseignez vos informations ci-dessous. Vous payez à la livraison, en espèces.
           </p>
         </div>
       </div>
@@ -189,17 +189,17 @@ export default function CheckoutPage() {
           <div className="lg:col-span-3">
             <div className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
               <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                Delivery Information
+                Informations de livraison
               </h2>
               <p className="mt-1 text-sm text-zinc-400">
-                Fill in your details for order delivery.
+                Renseignez vos coordonnées pour la livraison de votre commande.
               </p>
 
               <div className="mt-6 space-y-5">
                 {/* Full Name */}
                 <div>
                   <label htmlFor="fullName" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Full Name <span className="text-rose-500">*</span>
+                    Nom complet <span className="text-rose-500">*</span>
                   </label>
                   <input
                     id="fullName"
@@ -207,7 +207,7 @@ export default function CheckoutPage() {
                     type="text"
                     value={form.fullName}
                     onChange={handleChange}
-                    placeholder="John Doe"
+                    placeholder="Ahmed Ben Salah"
                     className={`mt-1.5 w-full rounded-xl border bg-zinc-50 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-zinc-500 focus:bg-white dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-500 ${
                       errors.fullName ? "border-rose-500" : "border-zinc-200"
                     }`}
@@ -220,7 +220,7 @@ export default function CheckoutPage() {
                 {/* Phone Number */}
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Phone Number <span className="text-rose-500">*</span>
+                    Numéro de téléphone <span className="text-rose-500">*</span>
                   </label>
                   <input
                     id="phone"
@@ -228,7 +228,7 @@ export default function CheckoutPage() {
                     type="tel"
                     value={form.phone}
                     onChange={handleChange}
-                    placeholder="+1 (555) 123-4567"
+                    placeholder="+216 20 123 456"
                     className={`mt-1.5 w-full rounded-xl border bg-zinc-50 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-zinc-500 focus:bg-white dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-500 ${
                       errors.phone ? "border-rose-500" : "border-zinc-200"
                     }`}
@@ -241,7 +241,7 @@ export default function CheckoutPage() {
                 {/* Delivery Address */}
                 <div>
                   <label htmlFor="address" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Delivery Address <span className="text-rose-500">*</span>
+                    Adresse de livraison <span className="text-rose-500">*</span>
                   </label>
                   <input
                     id="address"
@@ -249,7 +249,7 @@ export default function CheckoutPage() {
                     type="text"
                     value={form.address}
                     onChange={handleChange}
-                    placeholder="123 Main Street, Apt 4B"
+                    placeholder="12 Avenue Habib Bourguiba, Apt 3"
                     className={`mt-1.5 w-full rounded-xl border bg-zinc-50 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-zinc-500 focus:bg-white dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-500 ${
                       errors.address ? "border-rose-500" : "border-zinc-200"
                     }`}
@@ -262,7 +262,7 @@ export default function CheckoutPage() {
                 {/* City */}
                 <div>
                   <label htmlFor="city" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    City <span className="text-rose-500">*</span>
+                    Ville <span className="text-rose-500">*</span>
                   </label>
                   <input
                     id="city"
@@ -270,7 +270,7 @@ export default function CheckoutPage() {
                     type="text"
                     value={form.city}
                     onChange={handleChange}
-                    placeholder="New York"
+                    placeholder="Tunis"
                     className={`mt-1.5 w-full rounded-xl border bg-zinc-50 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-zinc-500 focus:bg-white dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-500 ${
                       errors.city ? "border-rose-500" : "border-zinc-200"
                     }`}
@@ -283,7 +283,7 @@ export default function CheckoutPage() {
                 {/* Order Notes */}
                 <div>
                   <label htmlFor="notes" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                    Order Notes <span className="text-zinc-400">(optional)</span>
+                    Notes de commande <span className="text-zinc-400">(optionnel)</span>
                   </label>
                   <textarea
                     id="notes"
@@ -291,7 +291,7 @@ export default function CheckoutPage() {
                     value={form.notes}
                     onChange={handleChange}
                     rows={3}
-                    placeholder="Any special instructions for your order..."
+                    placeholder="Instructions particulières pour votre commande..."
                     className="mt-1.5 w-full resize-none rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm text-zinc-900 placeholder-zinc-400 outline-none transition-colors focus:border-zinc-500 focus:bg-white dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100 dark:placeholder-zinc-500 dark:focus:border-zinc-500"
                   />
                 </div>
@@ -304,10 +304,10 @@ export default function CheckoutPage() {
           <div className="lg:col-span-2">
             <div className="sticky top-6 rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
               <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                Order Summary
+                Récapitulatif de la commande
               </h2>
               <p className="mt-1 text-sm text-zinc-400">
-                {totalItems} item{totalItems !== 1 && "s"} in your cart
+                {totalItems} article{totalItems !== 1 ? "s" : ""} dans votre panier
               </p>
 
               {/* Items List */}
@@ -329,11 +329,11 @@ export default function CheckoutPage() {
                         {item.name}
                       </h3>
                       <p className="text-xs text-zinc-400">
-                        {item.color} · {item.size} · Qty {item.quantity}
+                        {item.color} · {item.size} · Qté {item.quantity}
                       </p>
                     </div>
                     <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                      ${item.price * item.quantity}
+                      {item.price * item.quantity} TND
                     </span>
                   </li>
                 ))}
@@ -342,19 +342,19 @@ export default function CheckoutPage() {
               {/* Totals */}
               <div className="mt-6 space-y-3 border-t border-zinc-100 pt-4 dark:border-zinc-800">
                 <div className="flex justify-between text-sm">
-                  <span className="text-zinc-500 dark:text-zinc-400">Subtotal</span>
-                  <span className="font-medium text-zinc-900 dark:text-zinc-100">${totalPrice}</span>
+                  <span className="text-zinc-500 dark:text-zinc-400">Sous-total</span>
+                  <span className="font-medium text-zinc-900 dark:text-zinc-100">{totalPrice} TND</span>
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-zinc-500 dark:text-zinc-400">Shipping</span>
-                  <span className="font-medium text-emerald-600 dark:text-emerald-400">Free</span>
+                  <span className="text-zinc-500 dark:text-zinc-400">Livraison</span>
+                  <span className="font-medium text-emerald-600 dark:text-emerald-400">Gratuite</span>
                 </div>
                 <div className="flex justify-between border-t border-zinc-100 pt-3 dark:border-zinc-800">
                   <span className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-                    Grand Total
+                    Total
                   </span>
                   <span className="text-xl font-bold text-zinc-900 dark:text-zinc-50">
-                    ${totalPrice}
+                    {totalPrice} TND
                   </span>
                 </div>
               </div>
@@ -412,11 +412,11 @@ export default function CheckoutPage() {
                         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
                       />
                     </svg>
-                    Sending Order...
+                    Envoi de la commande...
                   </>
                 ) : (
                   <>
-                    Place Order
+                    Confirmer la commande
                     <svg
                       className="h-4 w-4"
                       fill="none"
@@ -438,7 +438,7 @@ export default function CheckoutPage() {
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="m10.5 19.5 3-3m0 0 3-3m-3 3-3 3m3-3h11.25M3.75 4.5l.375 4.5H19.5" />
                 </svg>
-                Continue Shopping
+                Continuer mes achats
               </Link>
             </div>
           </div>

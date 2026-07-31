@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/store/CartProvider";
 
@@ -22,7 +21,7 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
       {/* Panel */}
       <div
         role="dialog"
-        aria-label="Shopping cart"
+        aria-label="Panier"
         className={`fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col bg-white shadow-2xl transition-transform duration-300 ease-in-out dark:bg-zinc-900 ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
@@ -30,7 +29,7 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-zinc-200 px-6 py-4 dark:border-zinc-800">
           <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-            Your Cart ({totalItems})
+            Votre panier ({totalItems})
           </h2>
           <button
             onClick={onClose}
@@ -48,13 +47,13 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
             <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
               <span className="text-4xl">🛒</span>
               <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                Your cart is empty
+                Votre panier est vide
               </p>
               <button
                 onClick={onClose}
-                className="rounded-full bg-zinc-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+                className="rounded-full bg-zinc-950 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
               >
-                Continue Shopping
+                Continuer mes achats
               </button>
             </div>
           ) : (
@@ -108,7 +107,7 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
                       </div>
 
                       <span className="text-sm font-bold text-zinc-900 dark:text-zinc-100">
-                        ${item.price * item.quantity}
+                        {item.price * item.quantity} TND
                       </span>
                     </div>
                   </div>
@@ -132,19 +131,19 @@ export default function CartDrawer({ open, onClose }: { open: boolean; onClose: 
         {items.length > 0 && (
           <div className="border-t border-zinc-200 px-6 py-5 dark:border-zinc-800">
             <div className="flex items-center justify-between text-sm">
-              <span className="font-medium text-zinc-500 dark:text-zinc-400">Subtotal</span>
+              <span className="font-medium text-zinc-500 dark:text-zinc-400">Sous-total</span>
               <span className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                ${totalPrice}
+                {totalPrice} TND
               </span>
             </div>
-            <p className="mt-1 text-xs text-zinc-400">Taxes and shipping calculated at checkout</p>
+            <p className="mt-1 text-xs text-zinc-400">Taxes et livraison calculées à la commande</p>
 
             <Link
               href="/checkout"
               onClick={onClose}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-zinc-900 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-zinc-950 px-6 py-3 text-sm font-semibold text-white transition-all duration-300 hover:bg-zinc-700 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
             >
-              Proceed to Checkout
+              Passer à la commande
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="m9 4.5 6.75 6.75L9 18" />
               </svg>

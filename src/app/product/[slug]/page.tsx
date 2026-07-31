@@ -5,6 +5,13 @@ import Link from "next/link";
 import { products, type Product } from "@/data/products";
 import { useCartStore } from "@/store/CartProvider";
 
+/* ─── Badge colors ─── */
+
+const BADGE_STYLES: Record<string, string> = {
+  Promo: "bg-rose-600 text-white",
+  Nouveau: "bg-emerald-600 text-white",
+};
+
 /* ─── Accordion ─── */
 
 function Accordion({ title, children }: { title: string; children: React.ReactNode }) {
@@ -51,15 +58,17 @@ export default function ProductDetailPage({
     return (
       <div className="flex flex-col items-center justify-center gap-4 px-6 py-32 text-center">
         <span className="text-5xl">🔍</span>
-        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Product not found</h1>
+        <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+          Produit introuvable
+        </h1>
         <p className="text-sm text-zinc-500 dark:text-zinc-400">
-          The product you&apos;re looking for doesn&apos;t exist or has been removed.
+          Le produit que vous recherchez n&apos;existe pas ou a été retiré.
         </p>
         <Link
           href="/shop"
-          className="mt-4 rounded-full bg-zinc-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+          className="mt-4 rounded-full bg-zinc-950 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
         >
-          Browse Shop
+          Voir la boutique
         </Link>
       </div>
     );
@@ -108,11 +117,11 @@ function ProductDetailContent({ product }: { product: Product }) {
       {/* ─── Breadcrumb ─── */}
       <div className="mx-auto flex max-w-7xl items-center gap-2 px-6 pt-6 text-xs text-zinc-400 md:px-12">
         <Link href="/" className="hover:text-zinc-600 dark:hover:text-zinc-300">
-          Home
+          Accueil
         </Link>
         <span>/</span>
         <Link href="/shop" className="hover:text-zinc-600 dark:hover:text-zinc-300">
-          Shop
+          Boutique
         </Link>
         <span>/</span>
         <span className="text-zinc-600 dark:text-zinc-400">{product.name}</span>
@@ -132,15 +141,7 @@ function ProductDetailContent({ product }: { product: Product }) {
               {product.badge && (
                 <span
                   className={`absolute left-4 top-4 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider ${
-                    product.badge === "New"
-                      ? "bg-blue-600 text-white"
-                      : product.badge === "Sale"
-                        ? "bg-rose-600 text-white"
-                        : product.badge === "Eco"
-                          ? "bg-emerald-600 text-white"
-                          : product.badge === "Limited"
-                            ? "bg-amber-600 text-white"
-                            : "bg-zinc-900 text-white"
+                    BADGE_STYLES[product.badge] ?? "bg-zinc-950 text-white"
                   }`}
                 >
                   {product.badge}
@@ -155,11 +156,11 @@ function ProductDetailContent({ product }: { product: Product }) {
                   onClick={() => setSelectedImage(idx)}
                   className={`relative aspect-[4/5] w-20 overflow-hidden rounded-xl border-2 transition-all duration-200 ${
                     selectedImage === idx
-                      ? "border-zinc-900 dark:border-zinc-100"
+                      ? "border-zinc-950 dark:border-zinc-100"
                       : "border-transparent opacity-70 hover:opacity-100"
                   }`}
                 >
-                  <img src={img} alt={`${product.name} view ${idx + 1}`} className="h-full w-full object-cover" />
+                  <img src={img} alt={`${product.name} vue ${idx + 1}`} className="h-full w-full object-cover" />
                 </button>
               ))}
             </div>
@@ -200,10 +201,12 @@ function ProductDetailContent({ product }: { product: Product }) {
             {/* Price */}
             <div className="flex items-baseline gap-3">
               <span className="text-2xl font-bold text-zinc-900 dark:text-zinc-50">
-                ${product.price}
+                {product.price} TND
               </span>
               {product.originalPrice && (
-                <span className="text-lg text-zinc-400 line-through">${product.originalPrice}</span>
+                <span className="text-lg text-zinc-400 line-through">
+                  {product.originalPrice} TND
+                </span>
               )}
             </div>
 
@@ -223,12 +226,12 @@ function ProductDetailContent({ product }: { product: Product }) {
                   }`}
                 >
                   <span className={`h-1.5 w-1.5 rounded-full ${lowStock ? "bg-amber-500" : "bg-emerald-500"}`} />
-                  {lowStock ? `Only ${product.stock} left` : "In Stock"}
+                  {lowStock ? `Plus que ${product.stock} en stock` : "En stock"}
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-rose-50 px-3 py-1 text-xs font-medium text-rose-700 dark:bg-rose-900/30 dark:text-rose-400">
                   <span className="h-1.5 w-1.5 rounded-full bg-rose-500" />
-                  Out of Stock
+                  Rupture de stock
                 </span>
               )}
             </div>
@@ -237,7 +240,7 @@ function ProductDetailContent({ product }: { product: Product }) {
             {product.sizes.length > 0 && product.sizes[0] !== "One Size" && (
               <fieldset>
                 <legend className="mb-3 text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
-                  Size — <span className="font-normal normal-case">{selectedSize}</span>
+                  Taille — <span className="font-normal normal-case">{selectedSize}</span>
                 </legend>
                 <div className="flex flex-wrap gap-2">
                   {product.sizes.map((size) => (
@@ -247,7 +250,7 @@ function ProductDetailContent({ product }: { product: Product }) {
                       disabled={!inStock}
                       className={`h-10 min-w-[3rem] rounded-xl px-4 text-sm font-medium transition-all duration-200 ${
                         selectedSize === size
-                          ? "bg-zinc-900 text-white ring-2 ring-zinc-900 dark:bg-white dark:text-zinc-900 dark:ring-zinc-100"
+                          ? "bg-zinc-950 text-white ring-2 ring-zinc-950 dark:bg-white dark:text-zinc-950 dark:ring-zinc-100"
                           : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-300 dark:hover:bg-zinc-700"
                       } disabled:cursor-not-allowed disabled:opacity-40`}
                     >
@@ -262,7 +265,7 @@ function ProductDetailContent({ product }: { product: Product }) {
             {product.colors.length > 0 && (
               <fieldset>
                 <legend className="mb-3 text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
-                  Color — <span className="font-normal normal-case">{selectedColor}</span>
+                  Couleur — <span className="font-normal normal-case">{selectedColor}</span>
                 </legend>
                 <div className="flex flex-wrap gap-3">
                   {product.colors.map((color) => (
@@ -272,7 +275,7 @@ function ProductDetailContent({ product }: { product: Product }) {
                       disabled={!inStock}
                       className={`h-8 w-8 rounded-full transition-all duration-200 ${
                         selectedColor === color.name
-                          ? "scale-110 ring-2 ring-zinc-900 ring-offset-2 dark:ring-zinc-100"
+                          ? "scale-110 ring-2 ring-zinc-950 ring-offset-2 dark:ring-zinc-100"
                           : "ring-1 ring-zinc-300 hover:scale-105 dark:ring-zinc-600"
                       } disabled:cursor-not-allowed disabled:opacity-40`}
                       style={{ backgroundColor: color.hex }}
@@ -318,7 +321,7 @@ function ProductDetailContent({ product }: { product: Product }) {
                   added
                     ? "bg-emerald-600 text-white"
                     : inStock
-                      ? "bg-zinc-900 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+                      ? "bg-zinc-950 text-white hover:bg-zinc-700 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
                       : "cursor-not-allowed bg-zinc-200 text-zinc-500 dark:bg-zinc-800 dark:text-zinc-600"
                 }`}
               >
@@ -327,14 +330,14 @@ function ProductDetailContent({ product }: { product: Product }) {
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                     </svg>
-                    Added to Cart
+                    Ajouté au panier
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-2">
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 0 0-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 0 0-16.536-1.84M7.5 14.25 5.106 5.272M6 20.25a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Zm12.75 0a.75.75 0 1 1-1.5 0 .75.75 0 0 1 1.5 0Z" />
                     </svg>
-                    Add to Cart — ${product.price}
+                    Ajouter au panier — {product.price} TND
                   </span>
                 )}
               </button>
@@ -342,17 +345,17 @@ function ProductDetailContent({ product }: { product: Product }) {
 
             {/* Accordion sections */}
             <div className="mt-2 border-t border-zinc-200 dark:border-zinc-800">
-              <Accordion title="Fabric & Care">{product.fabricCare}</Accordion>
-              <Accordion title="Shipping Policy">{product.shippingPolicy}</Accordion>
+              <Accordion title="Composition & Entretien">{product.fabricCare}</Accordion>
+              <Accordion title="Livraison & Retours">{product.shippingPolicy}</Accordion>
             </div>
           </div>
         </div>
 
-        {/* ─── You Might Also Like ─── */}
+        {/* ─── Vous Pourriez Aussi Aimer ─── */}
         {related.length > 0 && (
           <section className="mt-20 border-t border-zinc-200 pt-12 dark:border-zinc-800">
             <h2 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-              You Might Also Like
+              Vous pourriez aussi aimer
             </h2>
             <div className="mt-8 flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-none">
               {related.map((p) => (
@@ -378,7 +381,7 @@ function ProductDetailContent({ product }: { product: Product }) {
                       </h3>
                     </div>
                     <span className="shrink-0 text-sm font-bold text-zinc-900 dark:text-zinc-100">
-                      ${p.price}
+                      {p.price} TND
                     </span>
                   </div>
                 </Link>

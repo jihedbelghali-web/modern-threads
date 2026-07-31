@@ -1,18 +1,19 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { Suspense, useState, useMemo, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { products } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 
 /* ── Filter constants ── */
 
-const TAGS = ["Streetwear", "Minimal Outerwear", "Essentials"] as const;
+const CATEGORIES = Array.from(new Set(products.map((p) => p.category)));
 const SIZES = ["S", "M", "L", "XL"] as const;
 const SORT_OPTIONS = [
-  { label: "Newest", value: "newest" },
-  { label: "Price: Low to High", value: "price-asc" },
-  { label: "Price: High to Low", value: "price-desc" },
-  { label: "Rating", value: "rating" },
+  { label: "Nouveautés", value: "newest" },
+  { label: "Prix croissant", value: "price-asc" },
+  { label: "Prix décroissant", value: "price-desc" },
+  { label: "Meilleures notes", value: "rating" },
 ] as const;
 
 type SortValue = (typeof SORT_OPTIONS)[number]["value"];
@@ -20,20 +21,60 @@ type SortValue = (typeof SORT_OPTIONS)[number]["value"];
 /* ── Price range helpers ── */
 
 const PRICE_MIN = 0;
-const PRICE_MAX = 600;
+const PRICE_MAX = 450;
+
+/* ── Page (wrapped in Suspense for useSearchParams) ── */
+
+export default function ShopPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-[50vh] items-center justify-center px-6 text-sm text-zinc-500">
+          Chargement de la boutique…
+        </div>
+      }
+    >
+      <ShopPageContent />
+    </Suspense>
+  );
+}
 
 /* ── Component ── */
 
-export default function ShopPage() {
+function ShopPageContent() {
+  const searchParams = useSearchParams();
+
   /* filters */
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [promoOnly, setPromoOnly] = useState(false);
   const [priceRange, setPriceRange] = useState<[number, number]>([PRICE_MIN, PRICE_MAX]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [sort, setSort] = useState<SortValue>("newest");
 
-  const toggleTag = (tag: string) =>
-    setSelectedTags((prev) =>
-      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+  // Track the URL-derived filter values last applied, so local checkbox toggles
+  // are never overwritten and we only setState when the URL actually changes.
+  const lastSyncedCategories = useRef("");
+  const lastSyncedPromo = useRef(false);
+
+  // Sync category/promo filters from URL params (?categorie=X&promo=1)
+  useEffect(() => {
+    const categorie = searchParams.get("categorie");
+    const nextCategories = categorie ? [categorie] : [];
+    if (nextCategories.join(",") !== lastSyncedCategories.current) {
+      lastSyncedCategories.current = nextCategories.join(",");
+      setSelectedCategories(nextCategories);
+    }
+
+    const nextPromo = searchParams.get("promo") === "1";
+    if (nextPromo !== lastSyncedPromo.current) {
+      lastSyncedPromo.current = nextPromo;
+      setPromoOnly(nextPromo);
+    }
+  }, [searchParams]);
+
+  const toggleCategory = (cat: string) =>
+    setSelectedCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
     );
 
   const toggleSize = (size: string) =>
@@ -46,9 +87,14 @@ export default function ShopPage() {
   const filtered = useMemo(() => {
     let result = [...products];
 
-    // Tags
-    if (selectedTags.length > 0) {
-      result = result.filter((p) => p.tags.some((t) => selectedTags.includes(t)));
+    // Categories
+    if (selectedCategories.length > 0) {
+      result = result.filter((p) => selectedCategories.includes(p.category));
+    }
+
+    // Promotions only
+    if (promoOnly) {
+      result = result.filter((p) => p.originalPrice != null || p.badge === "Promo");
     }
 
     // Price range
@@ -77,10 +123,20 @@ export default function ShopPage() {
     }
 
     return result;
-  }, [selectedTags, priceRange, selectedSizes, sort]);
+  }, [selectedCategories, promoOnly, priceRange, selectedSizes, sort]);
 
   const activeFiltersCount =
-    selectedTags.length + selectedSizes.length + (priceRange[0] > PRICE_MIN || priceRange[1] < PRICE_MAX ? 1 : 0);
+    selectedCategories.length +
+    (promoOnly ? 1 : 0) +
+    selectedSizes.length +
+    (priceRange[0] > PRICE_MIN || priceRange[1] < PRICE_MAX ? 1 : 0);
+
+  const clearFilters = () => {
+    setSelectedCategories([]);
+    setPromoOnly(false);
+    setPriceRange([PRICE_MIN, PRICE_MAX]);
+    setSelectedSizes([]);
+  };
 
   return (
     <div className="bg-zinc-50 dark:bg-zinc-950">
@@ -88,13 +144,13 @@ export default function ShopPage() {
       <div className="border-b border-zinc-200 bg-white px-6 py-10 dark:border-zinc-800 dark:bg-zinc-900">
         <div className="mx-auto max-w-7xl">
           <span className="text-xs font-semibold tracking-[0.2em] text-zinc-400 uppercase">
-            Explore
+            Boutique
           </span>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-zinc-900 sm:text-4xl dark:text-zinc-50">
-            All Products
+          <h1 className="mt-2 text-3xl font-extrabold tracking-tight text-zinc-950 uppercase sm:text-4xl dark:text-zinc-50">
+            Tous les produits
           </h1>
           <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400">
-            {filtered.length} product{filtered.length !== 1 && "s"}
+            {filtered.length} article{filtered.length !== 1 ? "s" : ""}
           </p>
         </div>
       </div>
@@ -105,37 +161,33 @@ export default function ShopPage() {
           <div className="sticky top-6 space-y-8 rounded-2xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900">
             {/* Header + clear */}
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Filters</h2>
+              <h2 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Filtres</h2>
               {activeFiltersCount > 0 && (
                 <button
-                  onClick={() => {
-                    setSelectedTags([]);
-                    setPriceRange([PRICE_MIN, PRICE_MAX]);
-                    setSelectedSizes([]);
-                  }}
+                  onClick={clearFilters}
                   className="text-xs font-medium text-zinc-400 underline-offset-2 hover:text-zinc-900 hover:underline dark:hover:text-zinc-100"
                 >
-                  Clear all
+                  Tout effacer
                 </button>
               )}
             </div>
 
-            {/* Category tags */}
+            {/* Categories */}
             <fieldset>
               <legend className="mb-3 text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
-                Category
+                Catégories
               </legend>
               <div className="space-y-2.5">
-                {TAGS.map((tag) => (
-                  <label key={tag} className="flex cursor-pointer items-center gap-3 text-sm">
+                {CATEGORIES.map((cat) => (
+                  <label key={cat} className="flex cursor-pointer items-center gap-3 text-sm">
                     <span
                       className={`flex h-4.5 w-4.5 items-center justify-center rounded border transition-colors ${
-                        selectedTags.includes(tag)
-                          ? "border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900"
+                        selectedCategories.includes(cat)
+                          ? "border-zinc-950 bg-zinc-950 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-950"
                           : "border-zinc-300 bg-white dark:border-zinc-600 dark:bg-zinc-800"
                       }`}
                     >
-                      {selectedTags.includes(tag) && (
+                      {selectedCategories.includes(cat) && (
                         <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                         </svg>
@@ -143,20 +195,46 @@ export default function ShopPage() {
                     </span>
                     <input
                       type="checkbox"
-                      checked={selectedTags.includes(tag)}
-                      onChange={() => toggleTag(tag)}
+                      checked={selectedCategories.includes(cat)}
+                      onChange={() => toggleCategory(cat)}
                       className="sr-only"
                     />
-                    <span className="text-zinc-700 dark:text-zinc-300">{tag}</span>
+                    <span className="text-zinc-700 dark:text-zinc-300">{cat}</span>
                   </label>
                 ))}
               </div>
             </fieldset>
 
+            {/* Promotions */}
+            <fieldset>
+              <label className="flex cursor-pointer items-center gap-3 text-sm">
+                <span
+                  className={`flex h-4.5 w-4.5 items-center justify-center rounded border transition-colors ${
+                    promoOnly
+                      ? "border-zinc-950 bg-zinc-950 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-950"
+                      : "border-zinc-300 bg-white dark:border-zinc-600 dark:bg-zinc-800"
+                  }`}
+                >
+                  {promoOnly && (
+                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                    </svg>
+                  )}
+                </span>
+                <input
+                  type="checkbox"
+                  checked={promoOnly}
+                  onChange={(e) => setPromoOnly(e.target.checked)}
+                  className="sr-only"
+                />
+                <span className="font-medium text-rose-600 uppercase">En promotion</span>
+              </label>
+            </fieldset>
+
             {/* Price range */}
             <fieldset>
               <legend className="mb-3 text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
-                Price Range
+                Prix (TND)
               </legend>
               <div className="space-y-3">
                 <input
@@ -168,11 +246,11 @@ export default function ShopPage() {
                   onChange={(e) =>
                     setPriceRange([priceRange[0], Math.max(priceRange[0], Number(e.target.value))])
                   }
-                  className="w-full accent-zinc-900 dark:accent-zinc-100"
+                  className="w-full accent-zinc-950 dark:accent-zinc-100"
                 />
                 <div className="flex justify-between text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                  <span>${priceRange[0]}</span>
-                  <span>${priceRange[1]}</span>
+                  <span>{priceRange[0]} TND</span>
+                  <span>{priceRange[1]} TND</span>
                 </div>
               </div>
             </fieldset>
@@ -180,7 +258,7 @@ export default function ShopPage() {
             {/* Sizes */}
             <fieldset>
               <legend className="mb-3 text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
-                Size
+                Tailles
               </legend>
               <div className="flex flex-wrap gap-2">
                 {SIZES.map((size) => (
@@ -189,7 +267,7 @@ export default function ShopPage() {
                     onClick={() => toggleSize(size)}
                     className={`h-9 w-9 rounded-lg text-sm font-medium transition-all duration-200 ${
                       selectedSizes.includes(size)
-                        ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
+                        ? "bg-zinc-950 text-white dark:bg-white dark:text-zinc-950"
                         : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700"
                     }`}
                   >
@@ -202,7 +280,7 @@ export default function ShopPage() {
             {/* Sort */}
             <fieldset>
               <legend className="mb-3 text-xs font-semibold tracking-wider text-zinc-500 uppercase dark:text-zinc-400">
-                Sort By
+                Trier par
               </legend>
               <select
                 value={sort}
@@ -231,21 +309,17 @@ export default function ShopPage() {
             <div className="flex flex-col items-center justify-center gap-4 py-24 text-center">
               <span className="text-5xl">🔍</span>
               <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                No products found
+                Aucun produit trouvé
               </h3>
               <p className="max-w-xs text-sm text-zinc-500 dark:text-zinc-400">
-                Try adjusting your filters or clearing them to see the full collection.
+                Essayez d&apos;ajuster vos filtres ou de les effacer pour voir toute la collection.
               </p>
               {activeFiltersCount > 0 && (
                 <button
-                  onClick={() => {
-                    setSelectedTags([]);
-                    setPriceRange([PRICE_MIN, PRICE_MAX]);
-                    setSelectedSizes([]);
-                  }}
-                  className="mt-2 rounded-full bg-zinc-900 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-900 dark:hover:bg-zinc-200"
+                  onClick={clearFilters}
+                  className="mt-2 rounded-full bg-zinc-950 px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-zinc-700 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200"
                 >
-                  Clear Filters
+                  Effacer les filtres
                 </button>
               )}
             </div>
