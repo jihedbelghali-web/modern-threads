@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { products } from "@/data/products";
@@ -86,13 +86,31 @@ const categoryCount = (name: string) =>
 /*  Page                                                              */
 /* ------------------------------------------------------------------ */
 
+const AUTOPLAY_INTERVAL_MS = 5000;
+
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const goToPrev = () =>
-    setCurrentSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+  const goToPrev = useCallback(
+    () =>
+      setCurrentSlide(
+        (s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length
+      ),
+    []
+  );
 
-  const goToNext = () => setCurrentSlide((s) => (s + 1) % HERO_SLIDES.length);
+  const goToNext = useCallback(
+    () => setCurrentSlide((s) => (s + 1) % HERO_SLIDES.length),
+    []
+  );
+
+  // Autoplay: advance the carousel every 5s. The interval is re-created each
+  // time the slide changes, so manual navigation (arrows/dots) restarts the
+  // countdown, and it is cleared on unmount to avoid leaks.
+  useEffect(() => {
+    const timer = setInterval(goToNext, AUTOPLAY_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, [goToNext, currentSlide]);
 
   const slide = HERO_SLIDES[currentSlide];
 
