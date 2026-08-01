@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
 import { products } from "@/data/products";
@@ -49,6 +50,33 @@ const VALUE_PROPS = [
   },
 ];
 
+const HERO_SLIDES = [
+  {
+    badge: "Nouvelle Collection Été",
+    titleLine1: "New Collection",
+    titleLine2: "Summer",
+    subtitle: "Oversized T-Shirt Urban Wear",
+    image:
+      "https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?q=80&w=2000&auto=format&fit=crop",
+  },
+  {
+    badge: "Haute Couture 2026",
+    titleLine1: "Costumes &",
+    titleLine2: "Élégance",
+    subtitle: "Haute Couture Homme 2026",
+    image:
+      "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1200&auto=format&fit=crop",
+  },
+  {
+    badge: "Nouveautés Tendance",
+    titleLine1: "Chemises",
+    titleLine2: "Tendance",
+    subtitle: "Style Moderne & Confort",
+    image:
+      "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=1200&auto=format&fit=crop",
+  },
+];
+
 const FEATURED_PRODUCTS = products.slice(0, 8);
 
 const categoryCount = (name: string) =>
@@ -59,19 +87,33 @@ const categoryCount = (name: string) =>
 /* ------------------------------------------------------------------ */
 
 export default function Home() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const goToPrev = () =>
+    setCurrentSlide((s) => (s - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
+
+  const goToNext = () => setCurrentSlide((s) => (s + 1) % HERO_SLIDES.length);
+
+  const slide = HERO_SLIDES[currentSlide];
+
   return (
     <div className="flex flex-col">
       {/* ──────────────── Hero ──────────────── */}
       <section className="relative flex min-h-[92vh] items-center overflow-hidden bg-neutral-950">
-        {/* Full-bleed background */}
+        {/* Full-bleed background (crossfades between slides) */}
         <div className="absolute inset-0" aria-hidden="true">
-          <img
-            src="https://images.unsplash.com/photo-1495105787522-5334e3ffa0ef?q=80&w=2000&auto=format&fit=crop"
-            alt=""
-            className="h-full w-full object-cover object-top"
-            loading="eager"
-            fetchPriority="high"
-          />
+          {HERO_SLIDES.map((s, index) => (
+            <img
+              key={s.image}
+              src={s.image}
+              alt=""
+              className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ${
+                index === currentSlide ? "opacity-100" : "opacity-0"
+              }`}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "auto"}
+            />
+          ))}
           <div className="absolute inset-0 bg-neutral-950/35" />
           <div className="absolute inset-0 bg-gradient-to-b from-neutral-950/60 via-transparent to-neutral-950/70" />
           {/* Subtle spotlight behind the 3D headline for legibility */}
@@ -87,6 +129,7 @@ export default function Home() {
         {/* Carousel navigation arrows */}
         <button
           type="button"
+          onClick={goToPrev}
           className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-neutral-800/60 p-2.5 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-neutral-800/90 sm:left-6 sm:p-3"
           aria-label="Précédent"
         >
@@ -96,6 +139,7 @@ export default function Home() {
         </button>
         <button
           type="button"
+          onClick={goToNext}
           className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-neutral-800/60 p-2.5 text-white backdrop-blur-sm transition-all duration-300 hover:scale-110 hover:bg-neutral-800/90 sm:right-6 sm:p-3"
           aria-label="Suivant"
         >
@@ -104,29 +148,32 @@ export default function Home() {
           </svg>
         </button>
 
-        {/* Content */}
-        <div className="relative z-10 mx-auto w-full max-w-7xl px-6 py-24 text-center md:px-12">
+        {/* Content (re-animates on slide change) */}
+        <div
+          key={currentSlide}
+          className="relative z-10 mx-auto w-full max-w-7xl animate-fade-in px-6 py-24 text-center md:px-12"
+        >
           {/* Floating glass badge */}
           <div className="mb-8 flex justify-center">
             <Link
               href="/shop"
-              className="animate-fade-in inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-6 py-1.5 text-xs font-semibold uppercase tracking-widest text-gold-300 backdrop-blur-md transition-colors duration-300 hover:bg-white/25"
+              className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-6 py-1.5 text-xs font-semibold uppercase tracking-widest text-gold-300 backdrop-blur-md transition-colors duration-300 hover:bg-white/25"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-[#D4A359]" aria-hidden="true" />
-              Voir Plus
+              {slide.badge}
             </Link>
           </div>
 
           {/* 3D Main Headline */}
           <h1 className="text-4xl font-black uppercase tracking-tight text-neutral-900 [text-shadow:_0_4px_16px_rgba(0,0,0,0.8),_0_2px_0_#ffffff] md:text-7xl">
-            New Collection
+            {slide.titleLine1}
             <br />
-            Summer
+            {slide.titleLine2}
           </h1>
 
           {/* Subtitle */}
           <p className="mx-auto mt-6 max-w-2xl text-sm font-bold uppercase tracking-[0.3em] text-white [text-shadow:_0_2px_10px_rgba(0,0,0,0.9)] md:text-base">
-            Oversized T-Shirt Urban Wear
+            {slide.subtitle}
           </p>
 
           {/* Primary action */}
@@ -139,6 +186,24 @@ export default function Home() {
               <span aria-hidden="true">→</span>
             </Link>
           </div>
+        </div>
+
+        {/* Slide indicator dots */}
+        <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2.5">
+          {HERO_SLIDES.map((s, index) => (
+            <button
+              key={s.image}
+              type="button"
+              aria-label={`Aller à la diapositive ${index + 1}`}
+              aria-current={index === currentSlide ? "true" : undefined}
+              onClick={() => setCurrentSlide(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? "w-8 bg-[#D4A359]"
+                  : "w-2 bg-white/40 hover:bg-white/70"
+              }`}
+            />
+          ))}
         </div>
       </section>
 
