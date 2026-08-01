@@ -99,7 +99,12 @@ export default function Home() {
   return (
     <div className="flex flex-col">
       {/* ──────────────── Hero ──────────────── */}
-      <section className="relative flex min-h-[92vh] items-center overflow-hidden bg-neutral-950">
+      <section
+        role="region"
+        aria-roledescription="carousel"
+        aria-label="Collections en vedette"
+        className="relative flex min-h-[92vh] items-center overflow-hidden bg-neutral-950"
+      >
         {/* Full-bleed background (crossfades between slides) */}
         <div className="absolute inset-0" aria-hidden="true">
           {HERO_SLIDES.map((s, index) => (
@@ -151,6 +156,8 @@ export default function Home() {
         {/* Content (re-animates on slide change) */}
         <div
           key={currentSlide}
+          aria-live="polite"
+          aria-atomic="true"
           className="relative z-10 mx-auto w-full max-w-7xl animate-fade-in px-6 py-24 text-center md:px-12"
         >
           {/* Floating glass badge */}
